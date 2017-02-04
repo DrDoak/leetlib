@@ -4,20 +4,36 @@
 		"selected_items":
 		[
 			[
-				"dest",
-				"destinationY"
+				"for",
+				"for\tfor i=1,10"
+			],
+			[
+				"isMo",
+				"isMovingX"
 			],
 			[
 				"des",
+				"destinationY"
+			],
+			[
+				"dest",
 				"destinationX"
+			],
+			[
+				"de",
+				"destinationY"
+			],
+			[
+				"te",
+				"testX"
+			],
+			[
+				"testY",
+				"testY"
 			],
 			[
 				"no",
 				"nodeList"
-			],
-			[
-				"for",
-				"fori\tfor i,v in ipairs()"
 			],
 			[
 				"destinat",
@@ -136,112 +152,10 @@
 	"buffers":
 	[
 		{
-			"file": "objects/ObjSlope.lua",
-			"settings":
-			{
-				"buffer_size": 389,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "local ModTDAI = Class.create(\"ModTDAI\", Entity)\nModTDAI.dependencies = {\"ModActive\",\"ModPhysicsTD\"}\n\nfunction ModTDAI:create()\n\tself.wrapCheckFree = lume.fn(ModTDAI.mCheckFree, self)\n\tself.currDest = {x = 0, y = 0}\n\tself.nodeList = {}\n\tself.currTarget = {x=0,y=0}\n\tself.nodeThreashold = 4\n\tself.last\nend\n\nfunction ModTDAI:moveToPoint( destinationX,destinationY ,proximity)\n\tif self:checkClear(self.x,self.y,destinationX,destinationY,proximity) then\n\t\tself.nodeList = {}\n\t\tself:directToPoint(destinationX,destinationY,proximity)\n\telse\n\t\tif xl.distance(destinationX,destinationY,currDest.x ,currDest.y) > 4 then\n\t\t\tcurrDest.x = destinationX\n\t\t\tcurrDest.y = destinationY\n\t\t\tself:planPath(destinationX,destinationY,proximity)\n\t\tend\n\t\tif self.currTarget then\n\t\t\tself:directToPoint(currentTarget.x,currentTarget.y,proximity)\n\t\t\tif self:testProximity(self.currTarget.x,self.currTarget.y,self.nodeThreashold) then\n\t\t\t\tself:nextNode()\n\t\t\tend\n\t\telse\n\t\t\tself:planPath(destinationX,destinationY,proximity)\n\t\tend\n\tend\nend\nfunction ModTDAI:nextNode()\n\ttable.remove(self.nodeList,1)\n\tif #self.nodeList > 0 then\n\t\tself.currTarget = self.nodeList[1]\n\telse\n\t\tself.currTarget = nil\n\tend\nend\n\nfunction ModTDAI:planPath(dX,dY,prox)\n\tlocal foundPath = false\n\tlocal i = 1\n\twhile (i <= #self.nodeList) do \n\t\tlocal v = self.nodeList[i]\n\t\tif self:checkClear(v.x,v.y,dX,dY,prox) then\n\t\t\tfoundPath = true\n\t\t\ti = i + 1\n\t\tend\n\t\tif foundPath then\n\t\t\ttable.remove(self.nodeList,i)\n\t\telse\n\t\t\ti = i + 1\n\t\tend\n\tend\n\tif foundPath then\n\t\treturn\n\tend\nend\nfunction ModTDAI:directToPoint(destinationX, destinationY, proximity)\n\tlocal velX, velY = self.body:getLinearVelocity()\n\tif proximity ~= nil and self:testProximity(destinationX,destinationY,proximity) then\n\t\treturn false\n\telse\n\t\tif self.y > destinationY then -- must move up\n\t\t\tself.dir = 0\n\t\t\tif velY > (self.maxSpeedY * self.speedModY) then\n\t\t\t\tself.forceY = -self.acceleration  * self.body:getMass()\n\t\t\tend\n\t\telseif self.y < destinationY then -- must move down\n\t\t\tself.dir = 2\n\t\t\tif velY < -(self.maxSpeedY * self.speedModY) then\n\t\t\t\tself.forceY = self.acceleration  * self.body:getMass()\n\t\t\tend\n\t\tend\n\t\tif self.x < destinationX then\n\t\t\tself.dir = 1\n\t\t\tif velX < (self.maxSpeedX * self.speedModX) then\n\t\t\t\tself.forceX = self.acceleration  * self.body:getMass()\n\t\t\tend\n\t\telseif self.x > destinationX then\n\t\t\tself.dir = -1\n\t\t\tif velX > -(self.maxSpeedX * self.speedModX) then\n\t\t\t\tself.forceX = -self.acceleration  * self.body:getMass()\n\t\t\tend\n\t\tend\n\t\tself.isMoving = true\n\tend\n\treturn true\nend\n\nfunction ModTDAI:checkClear(startX,startY,destX,destY,proximity)\n\tlocal checkGroundY = self.y + (self.charHeight or self.height) + 4\n\tself.scanContacts = {}\n\tself.startCastPoint = {x = startX, y = startY}\n\tGame.world:rayCast(startX, startY,destX, destY, self.wrapCheckFree)\nend\n\nfunction ModTDAI:mCheckFree(fixture, x, y, xn, yn, fraction )\n\tif fixture then\n\t\tlocal other = fixture:getBody():getUserData()\n\t\tlocal category = fixture:getCategory()\n\t\tif fixture:isSensor() == false and other ~= nil and category ~= CL_INT and other ~= self  then\n\t\t\tlocal newEntry = {}\n\t\t\tnewEntry.collidePoint = {x = x, y=y}\n\t\t\tnewEntry.distance = util.\n\t\t\ttable.insert(self.scanContacts, newEntry )\n\t\tend\n\tend\n\treturn 1\nend\n\nreturn ModTDAI",
-			"file": "modules/ModTDAI.lua",
-			"file_size": 3201,
-			"file_write_time": 131260811956405076,
-			"settings":
-			{
-				"buffer_size": 3235,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "‰PNG\n\u001a\n   \nIHDR  \u0003   \u0002X\b\u0003   ­¨rB   \u0001sRGB ®Î\u001cé   \u0004gAMA  ±\u000büa\u0005  \u0003 PLTE\u0005\u0005\u0005\u0006\u0006\u0006\u0007\u0007\u0007\b\b\b\t\t\t\n\n\n\u000b\u000b\u000b\f\f\f\n\n\n\u000e\u000e\u000e\u0010\u0010\u0010\u0011\u0011\u0011\u0014\u0014\u0014\u0015\u0015\u0015\u0016\u0016\u0016\u0017\u0017\u0017\u0018\u0018\u0018\u0019\u0019\u0019\u001a\u001a\u001a\u001b\u001b\u001b\u001c\u001c\u001c\u001d\u001d\u001d\u001e\u001e\u001e\u001f\u001f\u001f   !!!\"\"\"###$$$%%%&&&'''((()))***+++,,,---...///000111222333444555666777888999:::;;;<<<===>>>???@@@AAABBBCCCDDDEEEFFFGGGHHHIIIJJJKKKLLLMMMNNNOOOPPPQQQRRRSSSTTTUUUVVVWWWXXXYYYZZZ[[[\\\\\\]]]^^^___```aaabbbcccdddeeefffggghhhiiijjjkkklllmmmnnnooopppqqqrrrssstttuuuvvvwwwxxxyyyzzz{{{|||}}}~~~€€€‚‚‚ƒƒƒ„„„………†††‡‡‡ˆˆˆ‰‰‰ŠŠŠ‹‹‹ŒŒŒŽŽŽ‘‘‘’’’“““”””•••–––———˜˜˜™™™ššš›››œœœžžžŸŸŸ   ¡¡¡¢¢¢£££¤¤¤¥¥¥¦¦¦§§§¨¨¨©©©ªªª«««¬¬¬­­­®®®¯¯¯°°°±±±²²²³³³´´´µµµ¶¶¶···¸¸¸¹¹¹ººº»»»¼¼¼½½½¾¾¾¿¿¿ÀÀÀÁÁÁÂÂÂÃÃÃÄÄÄÅÅÅÆÆÆÇÇÇÈÈÈÉÉÉÊÊÊËËËÌÌÌÍÍÍÎÎÎÏÏÏÐÐÐÑÑÑÒÒÒÓÓÓÔÔÔÕÕÕÖÖÖ×××ØØØÙÙÙÚÚÚÛÛÛÜÜÜÝÝÝÞÞÞßßßàààáááâââãããäääåååæææçççèèèéééêêêëëëìììíííîîîïïïðððñññòòòóóóôôôõõõööö÷÷÷øøøùùùúúúûûûüüüýýýþþþÿÿÿ                        6òN_   \tpHYs  \u000eÃ  \u000eÃ\u0001Ço¨d   \u0019tEXtSoftware paint.net 4.0.12\n\nÀ  4¸IDATx^íÝw\\\u0013é¢7ð{ß÷ž{ï{ßrÎ=ëZé-„$$\u0011A\u0004T\u0010\u0010A\u0011D\u0011»k/kï½»ÖU±bïmÅÞ;*vQ, \u0016\u0010\u0005QzÉÌðï\u001btÖE„‡I2™$“ß÷\u001fŸð9g!ÉüfžþüK% Ô\t\u0001\u0001 @@ \b\u0010\u0010 \u0002\u0004\u0004€ \u0001\u0001 @@ \b\u0010\u0010 \u0002\u0004\u0004€ \u0001\u0001 @@ \b\u0010\u0010 \u0002\u0004\u0004€ \u0001\u0001 @@ \b\u0010\u0010 \u0002\u0004\u0004€ \u0001\u0001 @@ \b\u0010\u0010 \u0002\u0004\u0004€ \u0001\u0001 @@ \b\u0010\u0010 \u0002\u0004\u0004€ \u0001\u0001 @@ \b\u0010\u0010 \u0002\u0004\u0004€ \u0001\u0001 @@ \b\u0010\u0010 \u0002\u0004\u0004€ \u0001\u0001 @@ \b\u0010\u0010 \u0002\u0004\u0004€ \u0001\u0001 @@ \b\u0010\u0010 \u0002\u0004\u0004€ \u0001\u0001 @@ \b\u0010\u0010 \u0002\u0004\u0004€ \u0001\u0001 @@ \b\u0010\u0010 \u0002\u0004\u0004€ \u0001\u0001 @@ \b\u0010\u0010 \u0002\u0004\u0004€ \u0001\u0001 @@ \b\u0010\u0010 \u0002\u0004\u0004€ \u0001\u0001 @@ \b\u0010\u0010 \u0002\u0004\u0004€ \u0001\u0001 @@ \b\u0010\u0010 \u0002\u0004\u0004€ \u0001\u0001 @@ \b\u0010\u0010 \u0002\u0004\u0004€ \u0001\u0001 @@ \b\u0010\u0010 \u0002\u0004\u0004€ \u0001\u0001 @@ \b\u0010\u0010 \u0002\u0004\u0004€ \u0001\u0001 °„€P\u001f>Ól\u0011@X–\u0010·‹öb‹ Â²€€0Ç|Fe°e aY@@rÇHfá\t\u0002¦aö\u0001a>Î‘·¹Œ6\b˜F]\u0001©H»s[ëI9ûÚdò¦*Zl,a_ \b¬ö€0\u001f¶ô\f\n\n\nî²ä^\u0011ÃþÐ\u0014˜O\u000bd­·\u0016±¯ „V= Ô»ÔÇU\u001e]Ý9\\æÜ*000@j\u00172ïÔ3“e„É™.W'”±¯ \u0004W= Y¿õêZ¥³Ÿ‹KðŠ«·nÝºqx¸·‹WÜœ=÷ŠM‘\u0011æÓ\\eÀ†bö\u0015€ðª\u0007$}L•6Ç¬»]úåGtîÉ¹1*;×ö‹žQ_~ $&wŽÜg\u000bÚ\u001f`BÕ\u0003¢yvõr•+÷ßÿÕ6g\nŸœ^?¬¹kôÞWB7Ø?NQµŒÇó\u0003L©öFz\nÔû\u00031ŽÊÞ+/¿\u0017°»•~3Ñ=`\u001bò\u0001&Å) Úˆ<û­³‡ƒß¯{34ìOŒz2HÒr\u0007Úç`Z\u001c\u0003RÉ”<>09ØU\u0016wH˜6\u0001u'VÞé\u000fä\u0003LŒk@´˜Ï7×usR/Ì\u0012 žU~)ªqçkB=­ ê¢C@´*Òçª\\\u0007ß4ú½l_˜ª×]ä\u0003LN·€TV–l\u000fW„oÉg_\u0019IÉ¶–ÎÃžaþ\u0015˜ž®\u0001©,¿9TªšòÒˆW/“·ÒO19\u0013ù 3 s@*éì•>¶q'>\u001bkhÉ¦RÏÎe_Y:ª\u0010A·hº\u0007DÛBHŒ‘\u0007ÌH6NK„~=Qâ·Þhñ\u0013\u0018ýtn\u0016[\u0004‹¤O@*5gøKÃV¼6ÂÍ‘~2Ð£Õ¶¯ó\\D pìÿ]É\u0016­\u000byð¥ð““Œ@¯€T2ŸN\u000f•9öJÌå;\"ô£î\u001e\u001d\u0013E“Ê\u0011ÿ2X$\u000fCÝ|šï6ð\n[¶hú\u0005D{%go\n—x¿RÈë×O?ëmÓé²ˆºw?uü×\u000eV¹\\¸b¿2â\u001e[¶hú\u0006D[Ïz8?H\u0016¼(•Ç\u0007)óf°*êº(žÌ¬¢\u0001ÿ&IfËÖ%)¨Ã\u001d¶hÑô\u000fH%Sxil\u000bÎûykP3\u001fÆ9†]\u0012S>*?\u000fý_?m²Ê~¬\u001b\u001dï²E‹f@@´5¢œC±vªIìÚ\u0011ƒ}šæéØä‹àùÄ\\QÿŸ†\u0003¬±\u001f‹9¦ìó‚-[4ƒ\u0002RYI¥Ík-é°æ\n\u001f·ýâß•­÷ˆkzbá„Æ\u001dB\u0015;DõPä¦t‰ÓüB¶lÑ\f\fH%S|~˜RÑ‡‡Ž§âø\u0016êx‘-\u001f¼á§:²Ê½sªõud¥÷P\u001c\u0016Å»64 ÚzÖû\u001d‘6ªÙÏ\fì{Ò\u001ch©˜ÿ™}!\u0012¥¿Ù\fýÞÍnžÕ-\u001bfN¨º<fË–Íð€h¯í§³TÍ:m7h¹!u!L6ó“¸î´tR{é~š:¨jwÅÚ\u001e!ŸÆØ/\u0010ÇbP>\u0002¢½U\u001eë§P\f9§ÿ’NŽ\fÍ\u0012Ùeôa¤løûª­SÝÇdd%¨}rÿ«âø6ù\tH%µ¶ƒ‹ß¼4=›£LZ_‡\u001eOEÖ\u001dªÙ¦jMûžèËA>‡­«þª§íB‘L‡à) ••ew'+í»\u001dÔoòIÎhÏ¨Û\"Ë\u0007s'X¹æËUR¸@Þëõ—ŸY‰²õò¨glÙÒñ\u0016Jæóþ.rïñ×õ¨g\u0015/\u0004ž\u0011ÙúAæm¿\u000eÐV°ªŠ)Ñ®‹Ä3¿¬^ÌÝHÅ6±|ü\u0005D[§x¶¨¬ýòWº>\n¨Ã*¯-b»€>MU†Üa«á\u0015;äÍ\u000fYM%‹É\u001a*\u001b˜É¾°x|\u0006¤’)¼8ÂÓµçq\u001d'ŸdÄ9Ì\u0013ÛþWå\têÖ‰ßî¢Å³œ¢\u001fˆ¬\nY§üé.!WDófy\nÈ—A‘\b'ŸéÉ¥:D¤b“4ö%[\u0016\u000bÍÑ ÕÊj¡ÓÇs°•Ì8)OPµÜ-ž\tC<\u0007D{i<œÙÚ#|u\u0006÷\u001aEæp×\u0004‘Õ?èÛ\u0011¶cs«Ý$èk\u001d\\f\u0015°/Dº\u0010\"û]DõeÞ\u0003RÉ\u0014œ\u0019ªTô8Ây¥ÈÓ\u001eÞ\u0017Ø¢Xdö÷ìûò»÷_¾»…j³\u0015ìƒÇ¤tö\u001cÃ¾\u0010\u0003þ\u0003¢½]fïˆl¦ž~ŸãsöIl«KlQ$Šç8w¾S£\u0016^²Ì£ƒxjæua2iØUT\u0003ZÆ\bˆ¶ž•:Ë×9|Ý[NŸ”è\u0002RºA©>ðC7çû‘ž=_±eÑÊŸ­j/ª\u0015oF\nˆö†yzˆ§¼Ï\u001f\\:§Rºø_f‹¢@_hç±äÇÑ ú~”ÃtQÌ ¯[ùVoÿCâ\u001aÐ2V@ªú³¢ìU\u0013\u001fÕûq1ç[u¸Í–EáeOÅè\u000fl¹ºŠCÞªí\u0015ì\u000bQ¢Nù+\u0017‹ì\u001e`´€hëYÏ\u0017¶h\u0014ºõ\u0003¹žE¿\u001aä4ADsù˜œ1ÎÝ\u001e×ÚAQº\\ÒIl\u0013jª£\u001fD7\u001b“£C\u0007¿%0b@*+ËÎ\nTzŽ¸Nê¼¡R‡º¶¹*¢«æÓd·V'ë¨…g\nT\fÍfË\"ô¶¿²gšÈòaÜ€T2ÙkÃ¤Ák«\b|Os-F\u0011vTDëÐ+Ö{\u0006Ô¹n˜¾\u001eæþ›X\u0017O1\u001f'9tº%º\t5Æ\nˆö!rc¸T:úNíUo¦ð@h£èË\"ª—Wìo­XWwÞË¶(Õbùž?ÓÃç°øšXÆ\u000eH%½º$\"¡¶ª)“³°•jàc\u0011]0Ô\u0019?É¤<öEmŠf;t{.¶ZÈ\u0017\u0015›Ô~ÛE8\u0012jô€ho›—\u0006Ë<‡ÞøáæB§òô™—)¢Ë…y\u0012ë4*›ø†^ÅÉÄ±ÛG\nåûÛ(WŠqJ¿ \u0001Ñ>D6†4\u000bÜ\\£%Rvµ{Ó€í\u0005bºfTtÎ–ë@%ú\u0006œ\u0017_O\u0016u:Ày‚XŽ¬øŽ\u0010\u0001Ñ>o\nöð\u001c÷¸ú˜Hñö\u000eÊ®§Å´M\u001cóy¶$äB}\u0015ÆO“œû‹n^/ý F2ê(«ŽÂ\u0004¤êÔvž]\u0013¿ÕQéœ%*÷á)¢\u001at-Z¢öÚZo-œI\u000ev\u0015Ól×*Ì‹ÞòÞ¢ëàýJ €Tm0\u0017gßb5[ÍÒ<\u001c%U,Ì\u0016UUC³ÏËk-‡>ÜŠ\u0004Y‡[¢º˜˜ÌÁM:Ü\u0014içœP\u0001ÑVS3¦Êåc¾T³Jöwñ\fÙXôõç\"Á¤„{Îã´â#{¨ŒØÓeq>OW…ž\u0013×\f¬¿\b\u0017ÊÊ‚øàªj\u0016µHåÜç’Èª\u0019E“\u001b÷~ÍéÁ@ŸoÛòˆˆî·eëT\u0001\"›¡X\u0001©,¹ ­f­89ÐÕs\u001e/Û]›\u0011æœ÷IŽUÆ‚ùò\u001e\u0019lÙòQG¼=«¯.\u0016\u0019A\u0003RUÍ’6¶u\nß.º\u000f´hžýL®uFæq´£XöU«¤\u001fv±Ÿ*–3Wk!l@*éÇ!ÿõ7û¥â[ý¬‡ê$[¬_ÅneK®\u001bs—3Ê³—Ø¶Ü¨Nà'È½¾6®Êf^+ß‰m¬ìbË¨Gl‘ƒ‚iÎ}Ä±º°l•<T\\‡‚Õ h@ÊG©#\u000f>&w\u001ft±X\\=Û&é°¨…yÚE&Ši½U\nõbœaò\u0001)ÛÑÒ®÷mMeaBGE»e™bzˆ\u0014Î²Û¨Ëû¡\u000exûŸ°ü\u001bï—\u0006H>ûBœ\u0004\fHÙ\u0016_ùøŒªË¨ìö8µ¬ßu\u0011Í~ÚÅë\f[äæód§.–ð”Ø\u001b ZÂ\u0005„:Ú\\>ÏFçì\bm\u0012\u0014Ÿ%–‡\bµÕ£G\u001a[æ†y\u001aã:ÅÒ\u000fÔ\u0012}\u0003DK°€0©Ýì§þu„TÅÝ\u0011Jé/çE²¼.=ÖcƒŽó.©\u0013\u0001>\u0007-ûâ\u0012\u0003DK°€äŽSÄU\u001f\u001dc>n‹to½T\u0014\u000f\u0011jƒkwÏ<.Z$®gn¼y³‚\u0006ˆ–P\u0001)û]Þîü÷7ÌŠ\u0007\u0013<]\u0006%‹ %’\u0012á¾Yç·Ádô¶ŸjÉóÑ¬ \u0001¢%P@ª\u001a kjÖ§˜¼Í¡Òˆm\u0016tgé\"{}öL¤OxÉ·Xî‚\u0018kh€h\t\u0013ª\u0006Hm»\n–ß\u0018â¡\u001e›nÙÕ,&9Ìó€>WJÙR·Ž5·ðµ\u0018\u001akh€h\t\u0013Ü±ß7@¾¡ß­\t°‰»lÑ‹ý\u000bçK‡é·ÛUæ@Å\u0018\u000bÝ\t¾\u0017m\u0005\n\u0010-A\u0002R²â‡\u0006È7å';y„¬³àýø˜¤`Ÿ£ú=\u0007èË!ª\u001d†L\u0014×¼¿™jš‰æoú+{‹¿\u0001¢%D@*v7—Ç×Ù¡«¹?ÚS5Âr7ÿ)˜é®÷\u0018%+=Ã\u001eê{o Þ]72|´ÎÝg<`ò&9D&‹¿\u0001¢%@@¨k\u001d\\ç\u0012¶º¡s\u0012‚šv>e¡“³˜«\u0001~§ômH0oû4œ ß.@LááÞ\u000e.AkM1ÚX0_îsX´k¤¾cü€0)QªaïØ\u0017µ«¸ÔUÖf¹eîŠQ0ÉnÂ'¶¬;ú¬÷1}âU’<AnÓaæÎ›y&håkvy·´†ã²ª\u0018= Ìë¾\nº¥Öó-ÒÏ&{©†½²Ä„\\Tûœ7àï.™ï¢û.@šì«‹ƒl|\u0016<2Í®bš“AªEâÚQ nF\u000fHîxeû¤zïrLÞŽP»ÁÏMp74PÙ‚†“\fÚ)ñqg\u0004*+šìë\t#Û¸x¼`¢1\u0014:)Ôv\u0004yÿH\u00111v@Š—ËƒOp¹ 4'ÚÉúÜ³¸v_j”Ç1ƒ®•ŠÍŠðT¶ÌAÙýMÃÛºº\u0004OÌ3Ñ%Ê¤÷‘öûþ„R13r@J6z©7p\u001bNª¸ÐE\u001ami»+1‡¥:NãýAöÀ¦3¹\u000e¸Q/–†º8·\u001b»ýV®©\u001e¶Ìû1Ò˜‡–÷¨×—q\u0003B\u001doí1Ÿëp\u0012•\u001cc\u001buÉ²¦fåOµ]nà_L\u001fW)qº/ÐY»ºÚy\fÞz+Ç„×ççén\u0001u\u001d\u0010$FF\n\b\u001c)ŸÈ}Œ€zÐG\u001d–hQ³“î…ù\\d‹z+Õ¬\u001f‡v:óñÈ@…G—¦]Î_¶Aí»ÃJ:°¾0f@è§qÎýÓu¨­ÒÏ\u0006Û·9dA\u001f?½Ãm¨á;Q§vRl¨ï1De&Žö‘F®znÚÑ\u0007Mbb•\u0015ÌÀú‹\u0011\u0003Âd\nuÑñÐJúõ(eàfËéAÌ\u001dç´Éðê†f‹¢\u0013y<JÛÒOi\u001f´à^©i\u001bÇôÕvrqžrP'#\u0006¤pž\"¬ÞÓ j`²&Èš×=-ÅÜ<ˆòåãˆ÷¬\u0001ns\bw\u0005Íãu1ŽváKn\u0015š¸ïˆ~Ò½É 7VÓõ…ñ\u0002R²º¹ï>+\u0004ÌÇEJŸÕ–²S_R»ˆ{lÑ\u0010ô\t_Ÿ:§«0yÛ:Ø»w‰ÌcÕ³âáÑ‹ºw\u00133o\u0006¨cj?áZ¼Œ\u0016Š=Í\u0015Kô\u0019BËŸç©˜e!\u0013©¯\u0007FÞg‹\u0006)œÔ¤×[¶\\Cùµñ*Ïþ;ùm{<\u001f¨l9E×\u0019–Ìû±ö\u0011×­¨\u0003ë\u000bc\u0005„º\u0016î:G¯™\u0010LþÚVò\u0005¦\u001a\u0006Ó\n_\u0001a\u001eEÈãkiûÒ\u0005–\u0005¸\u0006®zËsÓ¼àÐ(?ÉäWº]ìŸ¦*ü\u0012E°@Z7F\n\b“\u0012­ÔûÌü²j‰\u00161u‘¯€hÛéòŽ÷¾{ÇôÇ´;Ç7Mïä$és–÷n#¦8{«—k«ºä®d•gë½b:2\u001bã\u0004„yÕ·A×úf(Ö­8!P5Ö\u0012Ž¿½Ö6ê\u0001[4PÖ ÙÌjõJ&ïàä~íå¶ö-únÑñFÏQé\u001f]$\u001du˜ãR²ÁG½Öª:x¿2N@ò&ªÂn\u00180 U¶¿µÓ¯_6a4o—ýº=f‹\u0006¢OøûÖ¾a¦àî¾mÛ¶m\u001cæé \nê?ë¹WÆªÔh®ur<Àù&¤9ÜR6Wÿiý–Ë(\u0001©Hð\f:nPµ¹lrù\u001f\u000byZõ\u000b_ëNó§»õK¹wró”@û†?ÿÜ q»¥§’ÒºˆL³¤Áp®\u001bnÓ7;Ê¦}´€g:ïŒ\u0011\u0010êJ€j•c\u0019e§::þòÔÜŸ!HÆ½g‹†¢Îû4hÛNÚ¨‘|À‚%K–üžlüêþí å\u0002n\u0013W˜ç=Ü­m „e„€0¯{5\u001caðp«ælˆ[ï\u0007fÞ©¸Ë~\u0001?Ãþtî‰ñ’ÿù\u001fÒ¸é\u001bÎd—–•••\u000bp5–o”º\u000f>”Îa|åÃ\b»ŽwÍ¿Æk\fF\bHÁ|ÏˆG†¿šK]\u0015]n›uB¨\nÍâùè€e\n/ŽoéÖÂµaÜÝ|!/Ã¢\u001dÜ•=Vß©¯&W²HÙî,Ï=Í–‚ÿ€PÇü}y9ô”JîÒ¨‹YoQ¼Øn\u0007[4DÅÝ\u0019mÜƒæœÛ\u001dÐê¨°o·ìÞò®rIØÒTò¯½¨Rï°º\u0001\u0010\u0016ï\u0001ažF+fñ³Ó\u0006}¿»:êª\u0019'äÃD×ClQ_LéÛäUíl½'])`òçÈûÔ1žn,LÉ³}ÃT’È]ï\tO.z‹ÝH\u000bÝßÎp¼\u0007äÓ˜&±Ïyª@Ó{7\n3ãÍ9_ôj~š-êƒ)xqmÿ’¡N\u001e\u0003NVmPÌ<ŠrY)øP\u001cýþ@¬½|Ø‘·uÞ‰rF9è¶l^Lø\u000eHy‚Êÿ,o7}úIoÁú\u000eÈ\u001bßÍ °;lQge//lŸÓ;ÀÍN\u001a4l\u0007{\bDE‚ÔÿŠ ­ó\u001a¨´ßÚK¼~I¸_Çlá$ßÖIlÑúð\u001c\u0010:9Â#žÇ› }+Â}•ÙVÉ\u0006ëwV-S\u001cß·¥£ƒ*â×•‡n¼ûv{þ8Êq”\u000egò¦4yQ¤D\u0012>çtv-÷¶²9\nF[úYXúã9 ÙCeCx½ãWlSû\u001d3Óç;³ÉfA1[Ö\u0005•ybF¨Ä#rò¦S÷²Êªßµ™›Áê½¦ht1E)[\u0007·pl1xë{ýÞ\tQèµ·8ð\u001bÒ%ní¯óûa~\u001eoÛñy~?ù3íwè^!*²¹¯ÊÖgÄ®Gy?F¡t¥,&-\u000bŒÊ:5+ØÎ±Ó²ëßï˜Rö»‹\u0019×rŽ×€Ð'¼=\u0013x^RÎ¤õ”2Ï>”´Þ*]ÛèTæÅ%ìmCç]È®=ô\u0019=\u001d—˜jÊ,Sp]¬{cß±T?¢ûYŒ|¯yÞ \u0004Ák@^÷vžVÀ–yC_\u000eUl2ËfÈÀö·Ù\"'tî\n\u0003[4“Ç­}PR×“‡:¨nyÑt×#•qxB «zÀÎ´?SJo—öªõh\u0017+Ág@J–zÄ<cË<*]§\n4á5S·cÒAÜÛèLÁƒÝcÛ:º…ÏHÌ µ©\nÇ5üÅ”5\u001a&ÿÚâNn²îk\u001f|Hf×\u0004S´ŠÌ\u0003“Ïc@¨³\u0001-ö\u001bã³Ì\u0019Ñ$æ™ð½Ÿõa65ÏµN:7;Bâ\u001c8fçƒ\"ò;a\u001e„zn2U%ë\u000b¦øÑúîRIÇEwKµ/Žª\"yšÑoqèÜ;ûfð\u0017\u0010&=ÎÑ€ƒ \b˜'ÑòIyì\u000bó‘?Ã~;·\u0007\u001býîÈ¨–ŽÞ\u0003××hÿÖJ“ ëôÀÄ·\u0003MÚÎþÒÆA\u000b\u001fi\nç:/Ò§§Îâ•g&m\u001d\u0017êæÀ_@\nç¸uâaŽbm¨Óm›\u001btT™Q¼è­<É\u0016‰¨Œ½\u0003¥\ný§Ÿâ¸²<s ´úâBÓ Þ\u001e\u0018 ²ë°%©»ú¸ù=¼þp!~hkg—€Á«y\u000b\bu,Àç ±.ââ\u0015ªà«æÖ\f¹Ñ&´þ6zÅ»›ë{z8\u0007/¸Éy\u0007\u000bú¤¿ÏqÓWûé÷G\u0007Ê\u0015\u001d];[_\n«üÒˆVÎî!c7_y[ÆW@¨ëÑŠ\u0019F»ï1ÙCšt5·fÈQÉÀ×l±vLIúùõ#\u0003<b~¿£K«¢`ºCœ9œ/@g¯\u000fýçßÚ§™c\u0007‰\u00111Ÿ7\u00078¶Ÿ¶÷vNÕ]Š§€Ð·;:ô|a¼/•I‰–3¯=/™MHmt¦$õèâÞ>NnÁ£w=ÓmlˆIé$Yj\u0016\u0015ÿò3òÿÑô×\u001buvJ[\f†;Mê\u0014•ÛÈ[ŸØÛ\u0002O\u0001Éìï\u0016÷È˜Õ\u0002êl;Ïf5\u001aR0§Ù–:ï­TÆé…1\n\u0007yçi»n}ÐùsÑìV…\\7‹‹ò~ZÖá÷—¦¯ñ\u0019¢âÖÆõuÙPÓÒ\u0018yÛ%\u001f¾}ú<\u0005$Q\u0016yË¸OâÒxU›“æÔP3Hr”-Ö@HZÓCÑL\u001e·øÈ£?oDºù0J:Í,æ\u0007žÄí\u0019¡’Ç\u001d2Íiˆü ¯\u00064jÀÙÏv=NUëŠç' e‹ìŒ>A\"w´mÄ}3ª\u000e?ˆð½Â\u0016«+{›´ud«&\u000ea³½Ð{/vúl@ëËfpIÒ«~š_’½+ÊF5å®\u0005JQCîhI¯øM\\%ìùn#2^\u0002B]\u000bU\u001egËFS5)k(_{ˆðàŠwäC¶È¢\u000b^ß?¶rP€“S›ÑÛ\u001f\u0019´eÏÇI®3xŸ´£»\u000f£l÷j¿Þ§³}Ãâ³ñQ\u0007¼‚¯éýeð\u0011\u0010êa¬Ý`ã_ºtR¸û\n“Ž1çˆË7l±\"ïUJÒ™C\u001bç\fŠð´—†þº1)×À‹‰9ã×ê:[6¡”Žê\u000bUÿ–œ\u001dª”÷>d‘G?3O;+\fèòà! Ôƒ^î…¨üTlWû\u001e4—†:³¥ÑœªÍë™Â§gÖO\u001f\u0014\u001dÔÜÍÖA\u0011Ø{ÁÁä\u000f<4•\nÆ5œbúcR.ª:~}JÒ\u001fvvqP{`v£µõbÞ\u000foÜ#Cÿ§¹á\u0001¡\u001ft—u\u0013ætÚü©Ní“Í¢\u0019Âh\nç5ˆ/xóàÒÞÙ±^NÎž\u0001\u001dûLXºãøõ4ž6CdÎ5÷¾`òVÈÞ¦#þ¬\u0019h^,öþ¹Ý6‹Û]±`®gkC¦º\u001a\u001c\u0010úQ\\ÓHNof^ýâ1Ì\u001cš!TÚÆù~ï;{HdK\u0017[u·Y;N\\¾÷â\u0003¯ç£\u0015L²›lê\t'Ôò¿/ûëÚ*¿8X©\u001a÷Ø²\u001e\"ÔAoßÝ†Ô:\f\n\bý(V\u001d#ØéæôpÙZ3¨dåÎqøï¿ýëß›¹ûw\u0019½öLª1ú@™Ë­Ú\\4ñíúýH›ýl±\nóaU;yÔ\u0019³\\›S—ôXù|}ŽqúÆÀ€Pº7êrG¸îòÍê€3¦¿‡Q¯wNqÌÜqôjJmÛ\u001cð\"o²dº‰ÇB\u001e…«¿?äºä|lÓ€u¤=´Ì\n_¸SÒí‰A·\u0019Ã\u0002¢Iî)ï|K¸|h/›1Í:§˜C=ø¸[/¾6v¯\u001dsÖ?ÐÄÃég<cjœ B=\u001f¥–\u000f¿k!Õ¬œmÛz:­1l Ç €h®trë&h>*™çÝdãÍamÈ®Æ“|Ï\u001dëºÐ¤3²¨M6Sj¾GæcB˜,â°ùô¶“$…\u00068\u0004ße_èÉ€”èä\u0010wWÐ|h¿µsAê­¦¯\u0006k–ÿ}•‘k\u001aô±\u0016¡<_¥ŸO“m6ÿø\u001eË¯÷µo¹œÝêÎ¼ÝlÓèïó\nÌ²\u0001\u0001)Ý\u0011è9à±ÀùÐÖƒW¶;hò;XîØ&{Ø¢Ñd\u000f±]eÊÊÌãèæ_†\tk 3&«%\u0003®[@[=³ÓØ]bËúÒ; La‚¯ÛØ—&¸‘¼ÿÕÁo¿©\u0013ò\"VÊi9¡!è½ÒpS®V:Û<æ\t[ü\u000e“¿;R\u0016²Ûü\u000f,Ìø7GC7MÕ7 LÞb\u001fÕ´lS4\"™¬qò¶›êØGV(ÉmZßd‹Æó*ÎnµénÔT‚ýÔ:ö\u0018ÐÜ\u0019ìì½¸úîYæˆ:¢nÐÄÐkõ\f\b“=Cå½0×4\u0017)ó~¢\\½Ô Þmƒ–u3Â\u000eG5P;Üº>gËÂû4Å¾Î\u0005/tæ¬ænýÍ¼šõº¬«L—“|k£_@è´Ñn¾\u001bM¶F€ù¸ÔKeªx~µÏfÌ\u0007¶hDéq\u001eÛLÖ\nIéâuž-þˆ)Ü×ÙÌ«Y\u0015«ÜbÎ÷uXbXŠõ\n\b•ÜG\u0011¸Ý”\u001fNÑ\nµÇØw¦K\b½æŸ\u0006~ðœP\u001b]ú\t|¤Î_Î¶èVk\u0013„¥¹7ÄÅœ«YÌ5Ù–â=\u001e¾\u0017\fú\u0013õ\tˆæ|„SÔ)ÓÞ<Š¶·“4E\u0017ÁWùÓ\u001aog‹Fõ¤³ê ‰Þ$µÅq\u001aq›3:Ë¬«Yy#lF~¬Ì\u001fg3à\u001dû\u0013½è\u0011’\u0003a®=ï˜z0µâ\u000f›>7Mõídôs3ú\n±*%+Ü‡›hvæ§)\u000e[ÉÙ4ëj\u0016µG\u0015tK[Åx\u0018®0h,]÷€”$´ô\u001cöÌôOÖòÓÑÊŽ{LôíÜ\u000bó½Æ\u0016ŠI\u000eó>aššä“\u0018ïÚFA¾cÆÕ¬´®î«ªÆ\u00024ÛU!7\nø\u0004u\u000eHéN?éfñ‘P÷\u0006¹x­È1ÉŸrÁ+J˜\u0011ŠÂ¹.ÆÙÏµ^çZÄÖß\u0001ô¥šÕï”‰ûÜkQ¾Ä¥ç×]ËrFºL6à\u0013Ô5 %\t­ÕÓrÌãó 3g+e£ž\b>–¯õ‡óð,¶h\\ÌåÖÞ‚<«j¢\u0012\u001cgp˜lVUÍr÷Ÿn’/€¾èçuøëßDŸ\u000fð:¯ÿ\u0005«c@Ê··Myo6÷‹‚\n¡Ê®§„\u001fUg\u0012\u001aëuøš\u001eŠ&ü4Ý\u0014\u001bŠäŽuÞÎé{Ö¤Ìð¶í¼Ç4OòºdõûyôŸ›^\u0014Oúç¯ú/=Ó) Ì§um=f›tü¡†Ò‹±ÍüÖ\u000bþ\u0017\u0015Íkœ ÐïdÎx¶N2Á'~·} Ç'\u0017S\u0018+U¾RÏ¹\u000eB*[¯hÿÛŸ“ÔÊû´Þ›.\u0001aÞOS)&›×qhTÚ\u0018Oå¸G\u0002÷©e\u000esùƒ-\u001a]Î¯\u000e‹„ß¾9à>èÏM[êE½X\u001a\"\u000bYòÂ\\êYÌ½N²Í]\u0012Es\u001cô_!¡C@èô±n~kòÌç>ñ\u0005“·:Ø3ú°µ”(oCg‰rF\u001fQFÜgËÂ)œë´’ûgÊ\u0014]\u0019ÓÜ#æ¤™ôø~ž.\u001b˜É–µ˜kmýOë[\u0003ä\u001e\u0010MRo‰ÿNST‡É˜’ó=\u001d¼–½\u0013²\u000e|Í/\\¸k6s»«âôð<V¥S÷2³/ÊÆwé[sh‰ÐÇ}\u0003NUÿCògºOÐ÷øyÎ\u0001Ñœl/‹9i~ùÐ¢2¦+%ƒo\nØV?*­çä\u0003>Q»\u0015ÑÆŸ\u0018YÃYUW\u001dgùQ©\u0013[¸÷¿lò•:•ÌË\u001e.ßŸ@Ä\\\u000eluNÏš\u000fÇ€0…»ÛÙô{`fyß\u0014nð\f_/Ø*7*Áv¶€[ò¼îãºAàOžŽo:K×éÒLÁ¾(÷À\u0004“os]²Ø9âá÷Äçé®úŽ…p\fHÞÂ–ª\u0011¦›úT¯²›C$Ò~Ç>\nó\u0017~šb»YÀË@³C\u0016ó‚-\u000b$kˆó>Ýß¡æá\b‰r†‰Ûêôå`å®\u001a6Ì… }g>p\u000bˆæHsŸ\u0005&Y\u001dÅ\u0015ýn}ˆ×ØóŸ…ø#\u001fG\u0011&‚\u001bAFOçõÂ^uIþú¬\u0007cÞ/n%íqÂ¤{¦¾\u001f\"\u001bóCOkÁø\u00063õk\u001ep\u000b\bukÈ.ó›Nð½Š»³ƒÜÛÌHâiïO’“ª8A\u001b\u0005\u0015›%‘\u0006®ûÑ\n³Ón¸^‡µ3ÅÇºKZ­5á.×Å\u000b%\u0011?nOËœRøë7šÄ±ŠU–fÞ‹Çª0EW&û»‡,xbìA‘ò5Ž_ö­\u0016Nz¬ã*!ûGò'6‰×óS¤žOöT/úë„&•nT«wÖr­æŽ²_ ×ƒc@,\u0003“wz”Ú1r\u000f‡ÓÈ\nñn¤Û\u001ea/ Í\u000e÷¨Ç\u0002þÊ{í<Ï²E1y¿yIG½2MB¨3\u001e‹k{~ÑÇTáwõù›D\u0015\u0010íçs0ÖM5úªQëYÉ¡m\fÝ+CW¯ûx,\u0013n\u00139j‡c_ý»±™¢¡²\u0001&™¾È¤vUŒ­})tÖ`÷UúŒcŠ, Ú/7í·\u0010YÈ²4ã}?Ì!\u000fî³0xBío\u001eVµüG\u0018¹¿Ú¬3äó«8ÑÎ¦Û\u0015\u0013Ì!Í\u001eáÔ³ŽÓÂ©=žz&‰. Úvâ•ÑÍåÝþ0Z|ÉoNË\u0004ŸSñ~„ÔxÇÐ×tÕ?À°=4Wb•á\u001b\u0005_\u0015‘?Í­õ…º’ýªd³\u001e©\u0017_@´õ¬\u000f{£›5Ÿ™b¤ÆzFE¢Ð_}%}:@ïÁ`]•­v\u001e¯ïÌ\f\u0016•2ÔÍcX’°=;šíÍýöÖù+5[¤½^±e\u001dˆ1 ÚïçÙôV®\u0012ó¿ê\u001fq-\n(ŠÝ(6í~Õß}¯¡Ý\u001cô»Õ­m\u00037\n2,Å¢.„*V\u0010\u001eíO»xìÓým‰3 Ú†â©þ\u001e-\u0018ã\u0019Âìr\u001e'À–X51—}½.³e#»\u001a\u0010ÁÃ¦Ù\u0015×GzÊ¾Ÿ\u0013eTôƒÎ.#Hƒ7e+\u001cGé¾VC¤\u0001Ñ~^oÆ:t¼n„¦zþ4Ç\n¦\u0018\u0014ú0²Ù.aîÇ\u0007$£\fÚ)‡Åä­iå¹T°©Y\u001f†:wK%>!®\u0006øêÞû(Ú€TV¾\u001d¨Ž¼ÇÿˆHj—\u0016z\u0011\u0018‚Žo°HÁÂüÉ¶+øùEekÕªù\u0002Õ\u000b©ÝžaWÈ÷Ã#\u001bé¾[¾ˆ\u0003B§Æ5èN¾§èãŒª› Ó>¾Ùo3QˆÕœe;åÎ\u0007yºí\u0017¬ôU-\u0016¦\u001d’\u0011ç±¦ž6'½Ó±—ÎÃ;\"\u000eH%}7Òs ß;wÒëšÍ4Í¾Ù\u0007ìG\u000bÑöIïê4š·»~ñú\u0016ª¹B¬eÓlp‹McËuz\u0018¦:¥kZÅ\u001cJêZ¤Ëxž§\u0005}\u0018í´K€/¼\u0016‡\u001c‡\b°Õ\u0010½_\u0016]c5…!\nWúx\u000eyd„¦`\nO:È·ÖÛiY4ËFçåý¢\u000eH¥&ÑÇõW~ÇCî†ø]e‹\u0002;§Ž\u0014`³ºœQN«yì\u001eg\n÷upŠ¾d¤!©oJç6íU]ITtÑu4]Ü\u0001©,Û\u001b(ï|ÏYLGÝúe°E=‰Òm™¸^˜ó~ÁÉl™\u001fš+]ÝÚ'\u001a·{¹ÖVÉî\u0013G”ÖÃc§ŽO3‘\u0007¤²âB\u000f{¯¹üÍÌªXòóoÂO2úâÓT‡™n†f4\u0005sÜø>z<T\u0011ÀÛ©’ÔÛ”\u001f÷¨û<ÅeL.[&©XçÚCÇfºØ\u0003RI¥Ïôvév(Ÿ§{ï›~Î‡Ø¢Ðè“>mÏ\u001b»ùs/¸¥ÎíØúÐoG;\u0005\u001fãiì(kaÈ°?>~ÿ'RÇ\u0002\u0002¸}2iÝÜÖêVÝ\u0013}@*™¢ÄžRïÉ<-¨¿î\u001bx›-\n.o’Ç\b#Ÿ… Ye?Œÿ®2æíHU0OÏw\u0003ÿÑ@5ôÜ“OÕ¾Ïô®ž³¸=ö¨]Ê‡l™\u001bñ\u0007Dû©¼\\ìïÐ+‰†\"³³éP½Ö¢ò¹ÑAyÈ¸çÑÒ½Fèrb^pòçgâ\u000fõ`â¸ÀFêèÉ»ïå±ŸEÁ\u0014›îO9>ör\u00077š¢SG–5\u0004¤²²øh„{Øúû/Òª¼4`\u0013ÙÂi?¯6î%JR¼ÄÕ¸ÇéP[\u001cë\u001fMÐ\u0007óvŒ<ì\u000f^ž!t~Á­±m\u0014ö.¡“vÝÍ.cª6âmqœkø˜3^ªcº|ƒÖ\u0011JÍ½a\u001eî¡=ûT\u0019vJÿ^­§]d§Ù¢\t07Ûy]aËF‘ÑÃNßµèõ`ÞŽ¶:ÄS;„ÉO:µf¿‹$dÔïûO-on7üìC®Ì²¹6¿èr“±’€TÒ\u001f¶önÕ\\]¥õZý\u0007ŠÏª:“\u000e¶4¶ÂÉ\n\u0016\u0018q¢dY¼¼£±†ZèÌ±NÁûø›ºXñöÒÚ¡m$ö®\u001eÿøÏŸÔþÑ³\u0012Ó¹­bKoÑá&`-\u0001Ñ>D^^:ûÅÅl½+Iš\n6Syî\u0004Õ\t“(éÂ–ùG]\f•&\u0018ç\u0001¢ÅdðôŸó†Ç\njùÛkûWŽVþW“öqQÞÎÊ¸ågn?HMó>¯¸‚CÍF÷®:lÃg=\u0001áCÎXûm¼Ý\u0003õñª—ËvcÍÛ`žvQŽ2âl/úíÜ–îýžðÚ„cŠ6HÜ~{ôôñ™Å]<ì”A\u00111½\u0007ž2åú­»\u000eºú ýC-»w¤u—\u001eàþ%\" º¸ß¡¥QÛ õ¢6Ø\u000f1R/š&uPãîF=œ•É?ØÞ®×c^Ezw—ùU½RLÉÓƒ“#Ûúªe®\u000eM\u001bþó\u001f?5rù†õ\u001c=Ýî£\u0017’3J«%¢l¥Ã\\îÓM\u0011\u0010\u001d0‰²>/Ù²‰Ü\u000bn±Ó(µ ²£]\u0015m/\u00193\u001fZšËÑŠ‘|\u0006¼b£,6-3Ÿ\u001eÞ¼rîdâÁ=Û7­ùmÆÈ\u001ea-ÝmúG#'Ï¶}æï½öòÏ‡\ts\\\u0019Ç½Ž…€è l…½\t\u000e{úNÑbiØ\u0011#Ìu¡/´tîuÉè+%©3!J>—›¥wóØZ[•“.+xŸvÿêÉ\u0003›—M\u0019ÐÙÏ¥oomH^d}Ö6O\u001eFz]dÿwõC@tðvˆ;_K‰ôÅ¼\u0019.õ;Å3$ošó\b!¶e/šÙl\"Ëi¨\u0004I\\=ôŠÏož$\u001dY9<TÚÌÉ/nä¬•[\u000eìéÑd\u0013çG%\u0002¢ƒ›<ÏtÕ\u0003ýv¤M\u001fþ÷­{ÞO}Rˆì3çÕ²]¼=¨Òce›9ýÇ4ÙwŽ®ú5ÜKbß¤‰ƒÔù\u0007ŸãzR\u0006\u0002Â\u001dsÀm$\u001f»\u0019\u0018†¹\u0019\u0012y‹-ó'µ{+aN],[ì\u001a—ÆS\u00145›\\b¹·&*²ïž=²gãÒ©ƒTûOïIûR8Í¨@@¸+]f·Êèµôúeþ6íÏv)Rº\u0004\bÔ?÷¢«b)O\u000btžE9oÐµ=Æ”å½>äõÿ<œ¥‘s\u000eÝÉª÷ûD@¸{7Jr-š\u0012õî5ÿýX7\u0002;\b4KY³·EÛ=¼lÝZ¾ÖE—!¿¿äŽi<+¾_s\u001b÷àa+ŽÜÎ\"6½\u0010\u0010î\u001eEû\tvø³Ð\u0012eƒ…:–ôãd©ÿZ>ž!Ï»J¶èÕ¯P4·áöŠŒÓKúû;6ti;hùÑ›\u0019u\u001e\u0007€€pw©UŒñæy˜VE¼Ãb¡:°™¬)rõ<ÃO\\Õl•Õ×…U‡òåÿÜ\\UÙz•´Q__Ûÿv\nè;oç…Çµ¶Û\u0011\u0010î\u000eIÆ˜¾n\u001c9ã]„;\u0013ˆùø›—ä—Ó\u0006¬:øâM\u001f·\u0004ý:¦™µÿ\u001a\u0006mH®ï]Ð¿¤‰­WÔ¤MgR~\b\t\u0002Â™&ÞNøc\u000f\u0004’\u0012íË}ìÌpEû:Iü§\u0019vÆ\u000e½_\u0019¥ï\u000e~[~ZZ­q_þêVâÚñÑ-\u001cmUÑ“·=ü>¸\b\bg\u001f';\u000b|òšpÎ{\u000b»]¤æá\fïf\u001dw\u0018²¥Ü»aÒßõ½_íl4»Æö\u0017šÏo›ÑÝÇÉ%bÑ•êkK\u0010\u0010Îž÷ô:Ç\u0016Å†Ùë,È¶¦a\nŽÇyx\u000e=«÷\u0002\u0011æXóðÛúþŸ÷5›XË\u0001(tþÓ\u000b\t\u0003[¸\u0005N<žýíá†€pv#Ð\u0014ç‚\b¢l…Ýj¡Gx¨ŒUá²6³îè9±,o´ã|½O›>ì8¢ŽÖ$••8ÞÏVÙçŸón\u0010\u0010ÎŽÊ\u0006ëqB‘Ex?Îu?[\u0014\u000eSš<Å×­ýš×ú4E˜\u000bªÖWõ®ð\u001esû¥ÎNm:÷Ê‚¦.]ãï|©i! \\1›íô¿e™¹'Ý|.°E!1y'qséu8W÷+½xÂë¶;ÉwNËãž³ÅÚ”>X\u0011#µk7ç©6º\b\bWEsí·\u001aÜwo¦®\u0005tâáL)=Ð™\u001b;{xO|®ë\u0007Ë\\\u000ehaÀÔ˜‹Í;“×ÞW<ß3ÂO\u0016{ª\u001c\u0001áìÕ@ùq¶(:GÝ‡ñ}L\u0004Wå)\u000bƒ<»_Ó±\u0005T´Ðy‚\u0001g4\\k\u0015vŸ-Ö…ÊIìîØró'\u0004„«;aA7Ø¢Ø0›š-äsƒo0…§£\u001a\u0006íÓmoØç½”†œ4|7Ô¯þï’J\u001b+ñž„€puFÕ‹ToµdE\u000bm·˜°öH=\u001e¢ô›ó\\—\u0019˜Iá†ô(fôu=Æ\u0016Ir\u0016¶qC@8bv;L5ððp³•7ÝQøN¬j˜wsý\u0014ÝŽèpDÂ)eC6\u0007(šÙ`#‡\u0007\u0010Sxi>\u0002ÂQé\u0012[#m:hz9“œ\u000f°EÓ`ò\u0013»ÙµXÊ9\"û§p9î .LBƒ©œN’`\n\u0010\u0010ŽÞt;Ì\u0016EçMé\u0011¶h*Ô‹\u0019*‡Ž«\u001f•pjYP\u001blV\u001at$Ïq×\u001e\u001cŸ@\b\bG:·\u0012è\u001cá]lÞî\u000e[4¢#\u0003”î‘Ëïs¹ðK—73l\u0003¿[mý9\u001e™Ž€ptÉ'Z¬‹A*\u000fI'\b;\u0013«Vô»½¿(Ý;.yT}—·Ú•,¶ÝÅ\u0016õó²\u001b—Vº\u0016\u0002ÂÑ!çÑb]\fR™³þ™Y4¯¨Ì}\u0003<l:,¸XßS¤x‘\u0001)šÝˆãÎ?\b\b7t|£åFØ¯Í<0Å\u0006­Ìà\u0011•¹·—¼YÛ›ìËº\u0018\u001c\u0010fKã\u0019ÜÎ{D@¸)˜Ól'[\u0004c¢Þ\u001e_¾²¾óà\n\u000eHå\tion[Ã  ÜäMµ3éP\u0015aÊêÝÔÍ€€\u0014'}©¿Ý\nª÷1õ\u0015\u0002ÂMÞ\u0014{Ó\u000e\u0015@5ú\u0007„:ÖúLÕ¿\u0019ý¤ÜfÖ! Ü  æDÿ€Ð[l×TMŒ,œÝl\u0013§†\u0017\u0002Â\n\u0002bN\f¨bíq˜•¯ý‡ÙÒ´æ²ôÚ! Ü  æ¤x™Ó\u001e¶¨«DéÈ/] GÝFpšá€pƒ€˜“²#\u001d¯³E]÷êñ¬êß\u0013²\u0019_~P\u000f\u0004„\u001b\u0004Äœ0…wõŠ•\u0014ØánÕ¿'ä\u0003\u0010\u0010\u001e! \"‘\u0012ëu¸ªuŽ€ðëý`ŒƒˆÂç™öÑh\u0004„oI¾x‚ˆ\u0002ó¤‹Û°l\u0004„o÷{\u0014ë¦XV†º\u001c&Ÿò‚B@øUñø¹Lè\u0003ÃTìmîÒmûv\u0019\u0002\u0002P›’ƒq2EP³žœf+\" `u4éë#þw—\u001d\\vÎF@À\n•§\u000eú¯÷˜v³þC|\u0010\u0010°J\u0017\u0014Nr‡ \u0005wêÛ%\u0002\u0001\u0001«t;¬Íï£}¤\u0011Ë\u001e‘w=E@À*¥vó>—›8T-í\u0014ÿŠÔ?‰€€Uz=Hv¼’ÎÚ×ËÕ¹Ç^Â‘»\b\bX¥ÜÉŽUS#¨×\u001b#Ý=\u0007íI­«¹Ž€€U*YÜtÇ—BÅã\u0015\u001d%òè\u0005§ßÔÚ\u0018A@À*Ññ?'|-1%\u000fV÷jîÜâ—µIy?>F\u0010\u0010°JÌú\u0006›Øb%S–~lV¸«CÀ¨ýOkž,€€Uª\u001e\u0010-¦àáÎ‘>\n]£\u0016'}?¾Ž€€Uª\u0011\u0010-:çêÒî\nÛÖ³“«\u000f\u001e\" `•~\fˆVEú‘±­¤áË\u001eÿµË,\u0002\u0002V©Ö€hüéÄ0µGÔÆÌ?GF\u0010\u0010°Ju\u0004¤ê\u0014†}=Ý~IÌù\u001a\u0011\u0004\u0004¬\u0012³þ§IuìŒBe¬\t“´\u0018sþËÁ»\b\bX%fÓ?¥\u0017Ùò\u000fÊïÍ\u000föh;ã†6A\b\bX§'a®'Øâ˜Â«SüÜÚ-yA! `>NlB:çÉ;=ÌÃ.z\u0007\u0002\u0002Ö‰Žo0½ˆ-×Š~¿+V¦@@ÀJtù²KoÝ4/â;# `¥\u001e„{]b‹u*{ˆ€€•Ê\u0019c»‹Ð\bùŠA@ÀJÑk~^QÿÁÅ\b\bX«\u001d¦×È\u0014\u0002\u0002Öê˜¤G\u001a[¬\u001b\u0002\u0002Öêa„Océß  `­rÇ9lÐ°å:! `­è-\u000eCß±å:! `µ’ƒBn²Å:! `µ^\nô8XßH\b\u0002\u0002V«t…ó¬|¶\\\u0017\u0004\u0004¬\u0016sÆ»s\n[®\u000b\u0002\u0002Ö+½¯b[='ë! `½J×):¥²å:  `½˜W=\u001bO-f_Ô\u000e\u0001\u0001+F\u001d÷jy-×\u000e\u0001\u0001köy|³l±v\b\bX³Šß\u001boe‹µC@ÀšQû<²ÅÚ! `Õ\nÏ•°¥Ú!  \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   \u0004\b\b \u0001\u0002\u0002@€€ \u0010   uª¬üÿÎ„Ê J¿Kµ    IEND®B`‚",
-			"file": "/C/Users/LuoLei Zhao/Desktop/FHWOFHW.PNG",
-			"file_size": 14417,
-			"file_write_time": 131261532916565103,
-			"settings":
-			{
-				"buffer_size": 14417,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "modules/ModDrawableTD.lua",
-			"settings":
-			{
-				"buffer_size": 6173,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "objects/ObjCharTD.lua",
-			"settings":
-			{
-				"buffer_size": 2636,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "modules/ModControllable.lua",
-			"settings":
-			{
-				"buffer_size": 5788,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "modules/ModControllableTD.lua",
 			"settings":
 			{
-				"buffer_size": 1679,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "extra.lua",
-			"settings":
-			{
-				"buffer_size": 4014,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "modules/ModPhysics.lua",
-			"settings":
-			{
-				"buffer_size": 10034,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "modules/ModDrawable.lua",
-			"settings":
-			{
-				"buffer_size": 11499,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "modules/ModPhysicsTD.lua",
-			"settings":
-			{
-				"buffer_size": 5651,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "objects/ObjUnit.lua",
-			"settings":
-			{
-				"buffer_size": 42238,
+				"buffer_size": 1973,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -283,35 +197,54 @@
 	],
 	"file_history":
 	[
+		"/C/Users/LuoLei Zhao/leetlib/modules/ModDrawableTD.lua",
+		"/C/Users/LuoLei Zhao/leetlib/modules/ModDrawable.lua",
+		"/C/Users/LuoLei Zhao/leetlib/mixin/ClickText.lua",
+		"/C/Users/LuoLei Zhao/leetlib/objects/ObjDialogSequence.lua",
+		"/C/Users/LuoLei Zhao/leetlib/xl/TextEngine.lua",
+		"/C/Users/LuoLei Zhao/leetlib/objects/ObjIntHitboxTD.lua",
+		"/C/Users/LuoLei Zhao/leetlib/modules/ModControllable.lua",
+		"/C/Users/LuoLei Zhao/leetlib/objects/ObjSlope.lua",
+		"/C/Users/LuoLei Zhao/leetlib/objects/TimedText.lua",
+		"/C/Users/LuoLei Zhao/leetlib/objects/ObjIntHitbox.lua",
+		"/C/Users/LuoLei Zhao/leetlib/modules/ModDialog.lua",
+		"/C/Users/LuoLei Zhao/leetlib/objects/ObjTestInt.lua",
+		"/C/Users/LuoLei Zhao/leetlib/modules/ModPhysicsTD.lua",
+		"/C/Users/LuoLei Zhao/leetlib/modules/ModInteractive.lua",
+		"/C/Users/LuoLei Zhao/leetlib/mixin/DialogActive.lua",
+		"/C/Users/LuoLei Zhao/leetlib/mixin/Shop.lua",
+		"/C/Users/LuoLei Zhao/leetlib/modules/ModTDAI.lua",
+		"/C/Users/LuoLei Zhao/leetlib/MGame.lua",
+		"/C/Users/LuoLei Zhao/leetlib/util.lua",
+		"/C/Users/LuoLei Zhao/leetlib/objects/ObjEnemy.lua",
+		"/C/Users/LuoLei Zhao/leetlib/objects/ObjChar.lua",
+		"/C/Users/LuoLei Zhao/leetlib/objects/ObjCharTD.lua",
+		"/C/Users/LuoLei Zhao/leetlib/modules/ModControllableTD.lua",
+		"/C/Users/LuoLei Zhao/leetlib/extra.lua",
+		"/C/Users/LuoLei Zhao/leetlib/modules/ModPhysics.lua",
+		"/C/Users/LuoLei Zhao/leetlib/objects/ObjUnit.lua",
+		"/C/Users/LuoLei Zhao/leetlib/hump/gamestate.lua",
+		"/C/Users/LuoLei Zhao/leetlib/xl/DScreen.lua",
+		"/C/Users/LuoLei Zhao/leetlib/objects/ObjWall.lua",
+		"/C/Users/LuoLei Zhao/Desktop/FHWOFHW.PNG",
 		"/C/Program Files (x86)/Steam/steamapps/common/Dark Souls Prepare to Die Edition/MAP OF RIO.PNG",
 		"/C/Program Files (x86)/Steam/steamapps/common/Dark Souls Prepare to Die Edition/MAP OF RIO.MP3",
-		"/C/Users/LuoLei Zhao/leetlib/modules/ModPhysics.lua",
-		"/C/Users/LuoLei Zhao/leetlib/MGame.lua",
 		"/C/Users/LuoLei Zhao/leetlib/objects/ObjFence.lua",
 		"/C/Users/LuoLei Zhao/leetlib/modules/ModActive.lua",
-		"/C/Users/LuoLei Zhao/leetlib/modules/ModDrawable.lua",
 		"/C/Users/LuoLei Zhao/leetlib/xl/SpritePiece.lua",
 		"/C/Users/LuoLei Zhao/leetlib/objects/ObjGenericObj.lua",
-		"/C/Users/LuoLei Zhao/leetlib/modules/ModDrawableTD.lua",
-		"/C/Users/LuoLei Zhao/leetlib/modules/ModTDAI.lua",
 		"/C/Users/LuoLei Zhao/leetlib/assets/spr/scripts/PceBody.lua",
 		"/C/Users/LuoLei Zhao/leetlib/assets/spr/scripts/SprFence.lua",
 		"/C/Users/LuoLei Zhao/leetlib/objects/ObjCrate3D.lua",
 		"/C/Users/LuoLei Zhao/leetlib/objects/ObjTest.lua",
-		"/C/Users/LuoLei Zhao/leetlib/modules/ModPhysicsTD.lua",
 		"/C/Users/LuoLei Zhao/leetlib/objects/ObjCrate.lua",
 		"/C/Users/LuoLei Zhao/leetlib/assets/spr/scripts/SprCrate3D.lua",
 		"/C/Users/LuoLei Zhao/leetlib/assets/spr/scripts/PceWheel.lua",
 		"/C/Users/LuoLei Zhao/leetlib/objects/ObjRepeating.lua",
 		"/C/Users/LuoLei Zhao/leetlib/modules/ModTDObj.lua",
-		"/C/Users/LuoLei Zhao/leetlib/objects/ObjCharTD.lua",
 		"/C/Users/LuoLei Zhao/leetlib/assets/spr/scripts/SprBox.lua",
-		"/C/Users/LuoLei Zhao/leetlib/modules/ModControllable.lua",
-		"/C/Users/LuoLei Zhao/leetlib/objects/ObjChar.lua",
 		"/C/Users/LuoLei Zhao/leetlib/modules/ModInventory.lua",
 		"/C/Users/LuoLei Zhao/leetlib/objects/ObjAttackHitbox.lua",
-		"/C/Users/LuoLei Zhao/leetlib/extra.lua",
-		"/C/Users/LuoLei Zhao/leetlib/modules/ModControllableTD.lua",
 		"/C/Users/LuoLei Zhao/leetlib/xl/Scene.lua",
 		"/C/Users/LuoLei Zhao/leetlib/objects/ObjBaseUnitTD.lua",
 		"/C/Users/LuoLei Zhao/leetlib/assets/rooms/testRoom.lua",
@@ -322,12 +255,10 @@
 		"/C/Users/LuoLei Zhao/leetlib/modules/ModPartEmitter.lua",
 		"/C/Users/LuoLei Zhao/leetlib/modules/ModEquippable.lua",
 		"/C/Users/LuoLei Zhao/leetlib/modules/ModHitboxMaker.lua",
-		"/C/Users/LuoLei Zhao/leetlib/objects/ObjUnit.lua",
 		"/C/Users/LuoLei Zhao/leetlib/conf.lua",
 		"/C/Users/LuoLei Zhao/leetlib/xl/Lights.lua",
 		"/C/Users/LuoLei Zhao/leetlib/SettingManager.lua",
 		"/C/Users/LuoLei Zhao/leetlib/startup.lua",
-		"/C/Users/LuoLei Zhao/leetlib/util.lua",
 		"/C/Users/LuoLei Zhao/leetlib/objects/ObjBaseUnit.lua",
 		"/C/Users/LuoLei Zhao/leetlib/modules/ModWooden.lua",
 		"/C/Users/LuoLei Zhao/leetlib/xl/Keymap.lua",
@@ -336,7 +267,6 @@
 		"/C/Users/LuoLei Zhao/leetlib/assets/spr/scripts/SprTorchEqp.lua",
 		"/C/Users/LuoLei Zhao/leetlib/objects/ObjWeapon.lua",
 		"/C/Users/LuoLei Zhao/leetlib/libs/class.lua",
-		"/C/Users/LuoLei Zhao/leetlib/modules/ModInteractive.lua",
 		"/C/Users/LuoLei Zhao/leetlib/libs/Global.lua",
 		"/C/Users/LuoLei Zhao/leetlib/ModBase.lua",
 		"/C/Users/LuoLei Zhao/leetlib/Error",
@@ -362,7 +292,6 @@
 		"/C/Users/LuoLei Zhao/leetlib/objects/ModLight.lua",
 		"/C/Users/LuoLei Zhao/leetlib/objects/ModHitboxMaker.lua",
 		"/C/Users/LuoLei Zhao/leetlib/hump/camera.lua",
-		"/C/Users/LuoLei Zhao/leetlib/hump/gamestate.lua",
 		"/C/Users/LuoLei Zhao/leetlib/assets/rooms/initial_room.lua",
 		"/C/Users/LuoLei Zhao/leetlib/modules/ActiveObj.lua",
 		"/C/Users/LuoLei Zhao/leetlib/objects/ActiveObj.lua",
@@ -395,22 +324,7 @@
 		"/C/Users/LuoLei Zhao/IrrelevantGame/mixin/ClickText.lua",
 		"/C/Users/LuoLei Zhao/IrrelevantGame/mixin/Shop.lua",
 		"/C/Users/LuoLei Zhao/IrrelevantGame/objects/eqp/EqpBottle.lua",
-		"/C/Users/LuoLei Zhao/Documents/NU2016/Fall2016/IEMS/t-table.pdf",
-		"/C/Users/defaultuser0/omegalib/master/modules/firefly/firefly.py",
-		"/C/Users/defaultuser0/omegalib/master/modules/python/Lib/site-packages/numpy/core/__init__.py",
-		"/C/Users/LuoLei Zhao/IrrelevantGame/npcs/test_npc2.lua",
-		"/C/Users/LuoLei Zhao/IrrelevantGame/state/Dialog2.lua",
-		"/C/Users/LuoLei Zhao/IrrelevantGame/roomgen/RoomGen.lua",
-		"/C/Users/LuoLei Zhao/IrrelevantGame/roomgen/StCornerHV.lua",
-		"/C/Users/LuoLei Zhao/IrrelevantGame/roomgen/STCornerVH.lua",
-		"/C/Users/LuoLei Zhao/IrrelevantGame/roomgen/StVert.lua",
-		"/C/Users/LuoLei Zhao/IrrelevantGame/roomgen/structs/VtStairway.lua",
-		"/C/Users/LuoLei Zhao/IrrelevantGame/roomgen/structs/VtDrops.lua",
-		"/C/Users/LuoLei Zhao/IrrelevantGame/roomgen/structs/VtJumps.lua",
-		"/C/Users/LuoLei Zhao/IrrelevantGame/roomgen/structs/VtPlatforms.lua",
-		"/C/Users/LuoLei Zhao/IrrelevantGame/roomgen/structs/VtJumpsSolid.lua",
-		"/C/Users/LuoLei Zhao/IrrelevantGame/roomgen/ExTop.lua",
-		"/C/Users/LuoLei Zhao/IrrelevantGame/roomgen/StCross.lua"
+		"/C/Users/LuoLei Zhao/Documents/NU2016/Fall2016/IEMS/t-table.pdf"
 	],
 	"find":
 	{
@@ -431,6 +345,34 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"exclamation",
+			"font",
+			"util.print_table",
+			"proccessInv",
+			"interact",
+			"objintHitbox",
+			"FXBase",
+			"turnToPoint",
+			"self.itemList",
+			"dialogSe",
+			"objdialog",
+			"dialogActi",
+			"ObjTest",
+			"checkClear",
+			"planPath",
+			"checkclear",
+			"directtopoint",
+			"moveToPoint",
+			"advancingPos",
+			"then",
+			"directTopoint",
+			"checkClear",
+			"reconstruct",
+			"object",
+			"move",
+			"Game.player",
+			"ObjTest",
+			"newValue",
 			"remove",
 			"maxYSpeed",
 			"maxXSpeed",
@@ -530,35 +472,7 @@
 			"ObjInteractive",
 			"checkRange",
 			"wrapCheckRange",
-			"ModEquippable",
-			"keymap",
-			"ObjInteractive",
-			"ObjAttackhitbox",
-			"ObjintHitbox",
-			"fxexplosion",
-			"FxExplosion",
-			"ObjEquippable",
-			"ObjInteractive",
-			"FXSparkle",
-			"destroy",
-			"setSprPos",
-			"addSpritePiece",
-			"setSprPos",
-			"changeAnimation",
-			"-",
-			"setOrigin",
-			"setSprPos",
-			"height",
-			"charHeight",
-			"- 8",
-			"self.height",
-			"charheight",
-			"self.x",
-			"+ 16",
-			"scale",
-			"ModBase",
-			"onCollide",
-			"destroy"
+			"ModEquippable"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -566,6 +480,8 @@
 		"regex": false,
 		"replace_history":
 		[
+			"ObjTestInt",
+			"ObjEnemy",
 			"maxSpeedY",
 			"maxSpeedX",
 			"ObjFence",
@@ -691,9 +607,7 @@
 			"EILoS",
 			"EILos",
 			"objects.eqp",
-			"objects.",
-			"objects.eqp.ObjEquippable",
-			"ObjChainLight"
+			"objects."
 		],
 		"reverse": false,
 		"show_context": true,
@@ -704,195 +618,24 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "objects/ObjSlope.lua",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 389,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								373,
-								373
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Lua/Lua.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 11,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "modules/ModTDAI.lua",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3235,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3148,
-								3148
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Lua/Lua.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 1634.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "/C/Users/LuoLei Zhao/Desktop/FHWOFHW.PNG",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 14417,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								895,
-								895
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 1650.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "modules/ModDrawableTD.lua",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6173,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								777,
-								777
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Lua/Lua.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 215.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "objects/ObjCharTD.lua",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2636,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Lua/Lua.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1106.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "modules/ModControllable.lua",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5788,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1029,
-								1029
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Lua/Lua.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 2679.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
 					"file": "modules/ModControllableTD.lua",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1679,
+						"buffer_size": 1973,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								386,
-								386
+								1835,
+								1835
 							]
 						],
 						"settings":
@@ -901,155 +644,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1.0,
+						"translation.y": 606.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "extra.lua",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 4014,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3929,
-								3929
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Lua/Lua.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 2402.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "modules/ModPhysics.lua",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 10034,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								7992,
-								7992
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Lua/Lua.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 5366.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "modules/ModDrawable.lua",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 11499,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Lua/Lua.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "modules/ModPhysicsTD.lua",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5651,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4321,
-								4334
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Lua/Lua.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 2726.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"file": "objects/ObjUnit.lua",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 42238,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								38859,
-								38890
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Lua/Lua.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 29518.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 9,
+					"stack_index": 0,
 					"type": "text"
 				}
 			]
@@ -1088,7 +686,7 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 303.0
+		"height": 280.0
 	},
 	"output.find_results":
 	{
@@ -1108,6 +706,94 @@
 		"selected_items":
 		[
 			[
+				"moddraw",
+				"modules\\ModDrawableTD.lua"
+			],
+			[
+				"modcontro",
+				"modules\\ModControllableTD.lua"
+			],
+			[
+				"ojinthi",
+				"objects\\ObjIntHitbox.lua"
+			],
+			[
+				"objtestint",
+				"objects\\ObjTestInt.lua"
+			],
+			[
+				"modint",
+				"modules\\ModInteractive.lua"
+			],
+			[
+				"modinter",
+				"modules\\ModInteractive.lua"
+			],
+			[
+				"objtest",
+				"objects\\ObjTest.lua"
+			],
+			[
+				"click",
+				"mixin\\ClickText.lua"
+			],
+			[
+				"dialogac",
+				"mixin\\DialogActive.lua"
+			],
+			[
+				"objene",
+				"objects\\ObjEnemy.lua"
+			],
+			[
+				"util",
+				"util.lua"
+			],
+			[
+				"modtda",
+				"modules\\ModTDAI.lua"
+			],
+			[
+				"modcont",
+				"modules\\ModControllableTD.lua"
+			],
+			[
+				"mgame",
+				"MGame.lua"
+			],
+			[
+				"game",
+				"hump\\gamestate.lua"
+			],
+			[
+				"dsc",
+				"xl\\DScreen.lua"
+			],
+			[
+				"modphysicstd",
+				"modules\\ModPhysicsTD.lua"
+			],
+			[
+				"objchartd",
+				"objects\\ObjCharTD.lua"
+			],
+			[
+				"objcahr",
+				"objects\\ObjChar.lua"
+			],
+			[
+				"modcontrollable",
+				"modules\\ModControllable.lua"
+			],
+			[
+				"objchar",
+				"objects\\ObjCharTD.lua"
+			],
+			[
+				"objwall",
+				"objects\\ObjWall.lua"
+			],
+			[
 				"modph",
 				"modules\\ModPhysics.lua"
 			],
@@ -1124,10 +810,6 @@
 				"objects\\ObjUnit.lua"
 			],
 			[
-				"modphysicstd",
-				"modules\\ModPhysicsTD.lua"
-			],
-			[
 				"modp",
 				"modules\\ModPhysics.lua"
 			],
@@ -1140,20 +822,12 @@
 				"modules\\ModControllable.lua"
 			],
 			[
-				"objchar",
-				"objects\\ObjCharTD.lua"
-			],
-			[
 				"mgam",
 				"MGame.lua"
 			],
 			[
 				"modphys",
 				"modules\\ModPhysicsTD.lua"
-			],
-			[
-				"modtda",
-				"modules\\ModTDAI.lua"
 			],
 			[
 				"modac",
@@ -1196,20 +870,12 @@
 				"objects\\ObjGenericObj.lua"
 			],
 			[
-				"objtest",
-				"objects\\ObjTest.lua"
-			],
-			[
 				"objcrat",
 				"objects\\ObjCrate3D.lua"
 			],
 			[
 				"spr",
 				"assets\\spr\\scripts\\SprBox.lua"
-			],
-			[
-				"moddraw",
-				"modules\\ModDrawableTD.lua"
 			],
 			[
 				"crate",
@@ -1290,10 +956,6 @@
 			[
 				"scen",
 				"xl\\Scene.lua"
-			],
-			[
-				"modcont",
-				"modules\\ModControllable.lua"
 			],
 			[
 				"objatta",
@@ -1384,10 +1046,6 @@
 				"objects\\ObjBaseUnit.lua"
 			],
 			[
-				"mgame",
-				"MGame.lua"
-			],
-			[
 				"objattack",
 				"objects\\ObjAttackHitbox.lua"
 			],
@@ -1446,10 +1104,6 @@
 			[
 				"sprtor",
 				"assets\\spr\\scripts\\SprTorch.lua"
-			],
-			[
-				"objcahr",
-				"objects\\ObjChar.lua"
 			],
 			[
 				"modeq",
@@ -1532,14 +1186,6 @@
 				"objects\\ObjBaseUnit.lua"
 			],
 			[
-				"modinter",
-				"modules\\ModInteractive.lua"
-			],
-			[
-				"modcontro",
-				"modules\\ModControllable.lua"
-			],
-			[
 				"global",
 				"libs\\Global.lua"
 			],
@@ -1570,54 +1216,6 @@
 			[
 				"pceweh",
 				"assets\\spr\\scripts\\PceWheel.lua"
-			],
-			[
-				"pcebody",
-				"assets\\spr\\scripts\\PceBody.lua"
-			],
-			[
-				"modintera",
-				"modules\\ModInteractive.lua"
-			],
-			[
-				"modequippable",
-				"modules\\ModEquippable.lua"
-			],
-			[
-				"modinv",
-				"modules\\ModInventory.lua"
-			],
-			[
-				"modeqi",
-				"modules\\ModEquippable.lua"
-			],
-			[
-				"drawable",
-				"modules\\ModDrawable.lua"
-			],
-			[
-				"inven",
-				"xl\\Inventory.lua"
-			],
-			[
-				"modhitboxmaker",
-				"modules\\ModHitboxMaker.lua"
-			],
-			[
-				"modhitb",
-				"modules\\ModHitboxMaker.lua"
-			],
-			[
-				"interactiv",
-				"modules\\ModInteractive.lua"
-			],
-			[
-				"modbas",
-				"ModBase.lua"
-			],
-			[
-				"mode",
-				"modules\\ModEscapeFromHitstun.lua"
 			]
 		],
 		"width": 0.0
